@@ -83,6 +83,49 @@ jobs:
         run: echo "$extractBranchBaseRef" | od -tc
 
 
+      - name: CONTINUE_ON_ERROR Determine changed packages
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -vx
+          ### export BRANCH="${$extractBranch}"
+          # only detect packages with changes
+          PKG_ROOTS1=$(find . -name Makefile )
+          echo "PKG_ROOTS1 $PKG_ROOTS1"
+          PKG_ROOTS2=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" )
+          echo "PKG_ROOTS2 $PKG_ROOTS2"
+          PKG_ROOTS3=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" | \
+            sed -e 's@./\(.*\)/Makefile@\1/@')
+          echo "PKG_ROOTS3 $PKG_ROOTS3"
+          PKG_ROOTS=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" | \
+            sed -e 's@./\(.*\)/Makefile@\1/@')
+          CHANGES3=$(git diff --diff-filter=d --name-only origin/$extractBranchBaseRef...)
+          CHANGES2=$(git diff --diff-filter=d --name-only origin/$extractBranch...)
+          CHANGES=$(git diff --diff-filter=d --name-only origin/$BRANCH...)
+
+          for ROOT in $PKG_ROOTS; do
+            for CHANGE in $CHANGES; do
+              if [[ "$CHANGE" == "$ROOT"* ]]; then
+                PACKAGES+=$(echo "$ROOT" | sed -e 's@.*/\(.*\)/@\1 @')
+                PACKAGEStest+=$(echo "$ROOT" | sed -e 's@.*/\(.*\).*//@\1 @')
+                echo "found CHANGEs in this PACKAGES: $PACKAGEStest
+                echo "found CHANGEs in this PACKAGES: $PACKAGES"
+                break
+              fi
+            done
+          done
+
+          # fallback to test packages if nothing explicitly changes this is
+          # should run if other mechanics in packages.git changed
+          PACKAGES="${PACKAGES:-vim attendedsysupgrade-common bmon}"
+
+          echo "Building $PACKAGES"
+          echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
+
+
       - name: Determine changed packages
         run: |
           # only detect packages with changes
