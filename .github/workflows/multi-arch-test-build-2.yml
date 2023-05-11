@@ -1,4 +1,4 @@
-name: Test1 extractBranch
+name: Test2 extractBranchBaseRef
 
 on:
   push:
@@ -12,52 +12,52 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: arm_cortex-a9_vfpv3-d16
-            target: mvebu-cortexa9
-            runtime_test: false
+#          - arch: arm_cortex-a9_vfpv3-d16
+#            target: mvebu-cortexa9
+#            runtime_test: false
 
-          - arch: mips_24kc
-            target: ath79-generic
-            runtime_test: true
+#          - arch: mips_24kc
+#            target: ath79-generic
+#            runtime_test: true
 
-          - arch: mipsel_24kc
-            target: mt7621
-            runtime_test: false
+#          - arch: mipsel_24kc
+#            target: mt7621
+#            runtime_test: false
 
-          - arch: powerpc_464fp
-            target: apm821xx-nand
-            runtime_test: false
+#          - arch: powerpc_464fp
+#            target: apm821xx-nand
+#            runtime_test: false
 
-          - arch: powerpc_8548
-            target: mpc85xx-p1010
-            runtime_test: false
+#          - arch: powerpc_8548
+#            target: mpc85xx-p1010
+#            runtime_test: false
 
           - arch: aarch64_cortex-a53
             target: mvebu-cortexa53
             runtime_test: true
 
-          - arch: arm_cortex-a15_neon-vfpv4
-            target: armvirt-32
-            runtime_test: true
+#          - arch: arm_cortex-a15_neon-vfpv4
+#            target: armvirt-32
+#            runtime_test: true
 
           - arch: i386_pentium-mmx
             target: x86-geode
             runtime_test: true
 
-          - arch: x86_64
-            target: x86-64
-            runtime_test: true
+#          - arch: x86_64
+#            target: x86-64
+#            runtime_test: true
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Determine branch name
-        run: |
-          BRANCH="${GITHUB_BASE_REF#refs/heads/}"
-          echo "Building for $BRANCH"
-          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+#      - name: Determine branch name
+#        run: |
+#          BRANCH="${GITHUB_BASE_REF#refs/heads/}"
+#          echo "Building for $BRANCH"
+#          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       - name: Extract branch name via GITHUB_REF
         id: extractBranch
@@ -69,8 +69,8 @@ jobs:
         shell: bash
         run: echo "extractBranchBaseRef=$(echo ${GITHUB_BASE_REF#refs/heads/})" >> $GITHUB_ENV
 
-      - name: set BRANCH via extractBranch
-        run: echo "BRANCH=$(echo ${extractBranch})" >> $GITHUB_ENV
+      - name: set BRANCH via extractBranchBaseRef
+        run: echo "BRANCH=$(echo ${extractBranchBaseRef})" >> $GITHUB_ENV
 
       - name: echo extractBranch / extractBranchBaseRef
         run: |
