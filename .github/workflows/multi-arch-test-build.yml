@@ -71,7 +71,7 @@ jobs:
 
       - name: set BRANCH via extractBranch or if emty via extractBranchBaseRef
         run: |
-          if [ "$extractBranchBaseRef" == "" ]; than
+          if [ "$extractBranchBaseRef" == "" ]; then
           echo "BRANCH=$(echo ${extractBranch})" >> $GITHUB_ENV
           else
           echo "BRANCH=$(echo ${extractBranchBaseRef})" >> $GITHUB_ENV
