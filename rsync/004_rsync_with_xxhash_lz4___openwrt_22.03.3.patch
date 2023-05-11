@@ -1,0 +1,50 @@
+diff --git net/rsync/Config.in net/rsync/Config.in
+index f5e3b67b1..a1d8ff981 100644
+--- net/rsync/Config.in
++++ net/rsync/Config.in
+@@ -12,6 +12,16 @@ if PACKAGE_rsync
+ 		default y if USE_FS_ACL_ATTR
+ 		default n
+ 
++	config RSYNC_lz4
++		bool
++		prompt "Enable support for lz4 compression"
++		default n
++
++	config RSYNC_xxhash
++		bool
++		prompt "Enable xxhash support for hashing"
++		default n
++
+ 	config RSYNC_zstd
+ 		bool
+ 		prompt "Enable zstd stream compression"
+diff --git net/rsync/Makefile net/rsync/Makefile
+index fc4cd5097..7e5e50dd0 100644
+--- net/rsync/Makefile
++++ net/rsync/Makefile
+@@ -31,7 +31,7 @@ define Package/rsync
+   CATEGORY:=Network
+   SUBMENU:=File Transfer
+   TITLE:=Fast remote file copy program (like rcp)
+-  DEPENDS:=+libpopt +zlib +RSYNC_xattr:libattr +RSYNC_acl:libacl +RSYNC_zstd:libzstd $(ICONV_DEPENDS)
++  DEPENDS:=+libpopt +zlib +RSYNC_xattr:libattr +RSYNC_acl:libacl +RSYNC_lz4:liblz4 +RSYNC_xxhash:libxxhash +RSYNC_zstd:libzstd $(ICONV_DEPENDS)
+   URL:=https://rsync.samba.org/
+   MENU:=1
+ endef
+@@ -47,13 +47,13 @@ CONFIGURE_ARGS += \
+ 	--without-included-zlib \
+ 	--disable-debug \
+ 	--disable-asm \
+-	--disable-lz4 \
+ 	--disable-locale \
+ 	--disable-md2man \
+ 	--disable-openssl \
+ 	--disable-simd \
+ 	--disable-roll-simd \
+-	--disable-xxhash \
++	--$(if $(CONFIG_RSYNC_lz4),en,dis)able-lz4 \
++	--$(if $(CONFIG_RSYNC_xxhash),en,dis)able-xxhash \
+ 	--$(if $(CONFIG_BUILD_NLS),en,dis)able-iconv \
+ 	--$(if $(CONFIG_BUILD_NLS),en,dis)able-iconv-open \
+ 	--$(if $(CONFIG_RSYNC_zstd),en,dis)able-zstd \
