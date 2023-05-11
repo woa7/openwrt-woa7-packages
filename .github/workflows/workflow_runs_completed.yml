@@ -1,16 +1,35 @@
+name: All Tests OK?
+
 on:
   workflow_run:
-    workflows: [Test*]
-    types: [completed]
+    workflows:
+      - Test* 
+      - Test arm_cortex-a9_vfpv3-d16
+      - Test x86_64
+      - Test mipsel_24kc
+      - Test arm_cortex-a15_neon-vfpv4
+      - Test aarch64_cortex-a53
+      - Test powerpc_464fp
+      - Test powerpc_8548
+      - Test mips_24kc
+      - Test i386_pentium-mmx 
+#    branches:
+#      - master
+    types:
+      - completed
 
 jobs:
-  on-success:
+  checks:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      result: ${{ steps.wait.outputs.result }}
     steps:
-      - run: echo 'The triggering workflow passed'
-  on-failure:
+      - id: wait
+        uses: uplift-ltd/wait-for-workflow-run-action@f6c595f77ce729bedd5bb12d54120732f7f40d8d
+
+  checks_OK:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    needs: checks
+    if: ${{ needs.checks.outputs.result == 'success' }}
     steps:
-      - run: echo 'The triggering workflow failed'
+      - run: echo "checks OK"
