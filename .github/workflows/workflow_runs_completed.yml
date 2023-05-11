@@ -3,7 +3,16 @@ name: All Tests OK?
 on:
   workflow_run:
     workflows:
-      - Test*
+      - Test* 
+      - Test arm_cortex-a9_vfpv3-d16
+      - Test x86_64
+      - Test mipsel_24kc
+      - Test arm_cortex-a15_neon-vfpv4
+      - Test aarch64_cortex-a53
+      - Test powerpc_464fp
+      - Test powerpc_8548
+      - Test mips_24kc
+      - Test i386_pentium-mmx 
 #    branches:
 #      - master
     types:
