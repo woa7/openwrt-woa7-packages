@@ -19,7 +19,7 @@ on:
       - completed
 
 jobs:
-  checks:
+  checks_OK:
     runs-on: ubuntu-latest
     outputs:
       result: ${{ steps.wait.outputs.result }}
@@ -27,9 +27,9 @@ jobs:
       - id: wait
         uses: uplift-ltd/wait-for-workflow-run-action@f6c595f77ce729bedd5bb12d54120732f7f40d8d
 
-  checks_OK:
-    runs-on: ubuntu-latest
-    needs: checks
-    if: ${{ needs.checks.outputs.result == 'success' }}
-    steps:
-      - run: echo "checks OK"
+#  checks_OK:
+#    runs-on: ubuntu-latest
+#    needs: checks
+#    if: ${{ needs.checks.outputs.result == 'success' }}
+#    steps:
+#      - run: echo "checks OK"
