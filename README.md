@@ -1,8 +1,6 @@
 # OpenWrt woa7 Packages
 my OpenWrt Project packages
 
-# OpenWrt Node.js Packages (nodejs)
-
 ## Description
 
 my OpenWrt Packages: for Head (Development branch)
