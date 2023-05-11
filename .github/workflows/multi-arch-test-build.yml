@@ -102,9 +102,9 @@ jobs:
           PKG_ROOTS=$(find . -name Makefile | \
             grep -v ".*/src/Makefile" | \
             sed -e 's@./\(.*\)/Makefile@\1/@')
-          CHANGES3=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$extractBranchBaseRef...)||:
-          CHANGES2=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$extractBranch...)||:
-          CHANGES=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$BRANCH...)||:
+          CHANGES3=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$extractBranchBaseRef... ||:)||:
+          CHANGES2=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$extractBranch... ||:)||:
+          CHANGES=$(set -vx;set +eu;git diff --diff-filter=d --name-only origin/$BRANCH... ||:)||:
 
           for ROOT in $PKG_ROOTS; do
             for CHANGE in $CHANGES; do
