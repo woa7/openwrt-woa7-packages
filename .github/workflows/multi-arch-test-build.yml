@@ -71,6 +71,7 @@ jobs:
             for CHANGE in $CHANGES; do
               if [[ "$CHANGE" == "$ROOT"* ]]; then
                 PACKAGES+=$(echo "$ROOT" | sed -e 's@.*/\(.*\)/@\1 @')
+                echo "found CHANGEs in this PACKAGES: $PACKAGES"
                 break
               fi
             done
@@ -94,7 +95,8 @@ jobs:
           echo "$EOF" >> $GITHUB_ENV
 
       - name: Build
-        uses: openwrt/gh-action-sdk@v5
+        #uses: openwrt/gh-action-sdk@v5
+        uses: EkkoG/gh-action-sdk@b5cf39573bd23953198977161a281bf908d6c7d8
         env:
           ARCH: ${{ matrix.arch }}-${{ env.BRANCH }}
           FEEDNAME: packages_ci
