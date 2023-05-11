@@ -70,6 +70,7 @@ jobs:
         run: echo "extractBranchBaseRef=$(echo ${GITHUB_BASE_REF#refs/heads/})" >> $GITHUB_ENV
 
       - name: echo extractBranch / extractBranchBaseRef
+        run: |
           echo "GITHUB_REF  $GITHUB_REF"
           echo "GITHUB_BASE_REF  $GITHUB_BASE_REF"
           echo "extractBranch  $extractBranch"
