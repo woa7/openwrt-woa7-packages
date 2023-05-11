@@ -1,4 +1,4 @@
-name: Test1 extractBranch
+name: Test _REF/_BASE_REF
 
 on:
   push:
