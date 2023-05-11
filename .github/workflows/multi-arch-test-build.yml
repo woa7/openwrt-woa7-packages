@@ -59,9 +59,41 @@ jobs:
           echo "Building for $BRANCH"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
+      - name: Extract branch name via GITHUB_REF
+        id: extractBranch
+        shell: bash
+        run: echo "extractBranch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+
+      - name: Extract branch name via GITHUB_BASE_REF
+        id: extractBranchBaseRef
+        shell: bash
+        run: echo "extractBranchBaseRef=$(echo ${GITHUB_BASE_REF#refs/heads/})" >> $GITHUB_ENV
+
+      - name: echo extractBranch / extractBranchBaseRef
+          echo "GITHUB_REF  $GITHUB_REF"
+          echo "GITHUB_BASE_REF  $GITHUB_BASE_REF"
+          echo "extractBranch  $extractBranch"
+          echo "extractBranchBaseRef  $extractBranchBaseRef"
+          
+      - name: echo "$extractBranch" | od -tc
+        run: echo "$extractBranch" | od -tc
+        
+      - name: echo "$extractBranchBaseRef" | od -tc
+        run: echo "$extractBranchBaseRef" | od -tc
+
+
       - name: Determine changed packages
         run: |
           # only detect packages with changes
+          PKG_ROOTS1=$(find . -name Makefile )
+          echo "PKG_ROOTS1 $PKG_ROOTS1"
+          PKG_ROOTS2=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" )
+          echo "PKG_ROOTS2 $PKG_ROOTS2"
+          PKG_ROOTS3=$(find . -name Makefile | \
+            grep -v ".*/src/Makefile" | \
+            sed -e 's@./\(.*\)/Makefile@\1/@')
+          echo "PKG_ROOTS3 $PKG_ROOTS3"
           PKG_ROOTS=$(find . -name Makefile | \
             grep -v ".*/src/Makefile" | \
             sed -e 's@./\(.*\)/Makefile@\1/@')
@@ -71,6 +103,8 @@ jobs:
             for CHANGE in $CHANGES; do
               if [[ "$CHANGE" == "$ROOT"* ]]; then
                 PACKAGES+=$(echo "$ROOT" | sed -e 's@.*/\(.*\)/@\1 @')
+                PACKAGEStest+=$(echo "$ROOT" | sed -e 's@.*/\(.*\).*//@\1 @')
+                echo "found CHANGEs in this PACKAGES: $PACKAGEStest
                 echo "found CHANGEs in this PACKAGES: $PACKAGES"
                 break
               fi
